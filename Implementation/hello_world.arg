@@ -1,0 +1,6 @@
+!verwenden <augur.io>
+
+Hauptfunktion():
+    Zeichenfolge hello: "Hello World.\n"
+    io.hallen << hello << io.erledigt
+    zuruckgeben 0

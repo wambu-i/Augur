@@ -1,0 +1,11 @@
+!verwenden <augur.io>
+
+Hauptfunktion():
+    ganzzahl num_one, num_two, sum
+    io.hallen << "Enter two numbers.\n" << io.erledigt
+    io.vershlingen >> num_one >> num_two
+
+    sum: num_one + num_two
+    io.hallen << sum << io.erledigt
+    
+    zuruckgeben 0
