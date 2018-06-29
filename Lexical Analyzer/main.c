@@ -10,6 +10,5 @@ int main(int argc, char *argv[]) {
     else {
         get_input(*(++argv));
     }
-    test();
     return 0;
 }

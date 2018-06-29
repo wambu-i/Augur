@@ -3,32 +3,38 @@
 #include <stdlib.h>
 #include <string.h>
 #include "analyzer.h"
+#include <stdbool.h>
 
-struct node *head = NULL;
 
-void test() {
-    for (int i = 0; i < elements; i++){
-        match_language(read_lines[i]);
+static char *reg = "(a|b)*abb";
+
+
+int is_op(char *ch);
+
+
+int is_op(char *ch) {
+	if((*ch == '|') || (*ch == '/')  || (*ch == '*') || (*ch == '.') || (*ch == '(') || (*ch == ')')) {
+		return 1;
     }
+	return 0;
 }
 
-void add_lexeme(char *letter) {
-    struct node *buffer = head;
-    struct node *character = create_new(letter);
-    if (head == NULL) {
-        head = character;
-    }
-    while (buffer->forward != NULL) {
-        buffer = buffer->forward;
-        buffer->forward = character;
-        character->previous = buffer;
-    }
-}
+void pos_test() {
+    int nodes;
+    struct syntax_tree *buffer;
+    char *expr = malloc(sizeof(char) * 100);
+    strcpy(expr, augment_re(reg));
 
-struct lexemes *create_new(char *word) {
-    struct node *new_node = (struct node *) malloc(sizeof(struct node));
-    new_node->lexeme = word;
-    new_node->forward = NULL;
-    new_node->previous = NULL;
-    return new_node;
+    int length = (int) strlen(expr);
+    for (int i = 0; i < length; i++) {
+        switch (expr[i]) {
+            if (!is_op(expr[i])) {
+                buffer = create(expr[i], i + 1);
+                buffer->nullable = false;
+
+            }
+        }
+
+    }
+
 }
