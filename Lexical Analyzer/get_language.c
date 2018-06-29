@@ -11,7 +11,7 @@
 char *read_lines[MAXLINES];
 int elements;
 
-void get_input(const char *fp) {
+int get_input(const char *fp) {
     FILE *contents;
     char *line = NULL;
     ssize_t read;
@@ -27,9 +27,10 @@ void get_input(const char *fp) {
     }
     fclose(contents);
     free(line);
+    return EXIT_SUCCESS;
 }
 
-void create_buffer(const char *fp) {
+int create_buffer(const char *fp) {
     FILE *contents;
     unsigned long size;
     size_t number;
@@ -56,6 +57,8 @@ void create_buffer(const char *fp) {
     }
 
     read = fread(buffer, BUFFER_SIZE, space, contents);
+
+    return EXIT_SUCCESS;
 }
 
 void filecopy(char *ifp){
