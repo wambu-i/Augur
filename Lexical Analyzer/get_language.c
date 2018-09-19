@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "analyzer.h"
+#include "globals.h"
 
 #define MAXLINES 5000
 #define BUFFER_SIZE 4096

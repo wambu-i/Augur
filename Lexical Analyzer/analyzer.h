@@ -5,7 +5,6 @@
 #define MAXLINES 5000
 
 extern char *read_lines[MAXLINES];
-extern int elements;
 
 typedef struct node {
 	char *lexeme;

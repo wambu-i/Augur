@@ -1,7 +1,7 @@
 CC:=gcc
 
 OUTPUT:=augur
-OBJECTS:=main.o analyzer.o automata.o regex.o get_language.o
+OBJECTS:=main.o analyzer.o nfa_simulation.o dfa_simulation.o regex.o get_language.o
 CFLAGS:=-Wall -Wextra
 
 LIBRARIES:=-lpcre
