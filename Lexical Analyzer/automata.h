@@ -12,8 +12,9 @@
 
 /* Data Structures */
 typedef struct nfa_state {
-
-
+    int character;
+    struct nfa_state *next_state;
+    struct nfa_state *split_state;
 };
 
 /*
@@ -27,9 +28,18 @@ typedef enum error_states {
 
 } errors;
 
+typedef enum re_operands {
+    L_PAREN, /*( */
+    R_PAREN, /*) */
+    CONCAT,
+    ALTER, /* | */
+    CLOS /* * */
+} operands;
+
+
 /* Function Declaration */
 void parse_errors(int type);
-struct nfa_state thompson_construction(struct nfa_state *);
+struct nfa_state *state_construction(int , struct nfa_state *, struct nfa_state *);
 
 void concatenation(struct nfa_state *, struct nfa_state *);
 
@@ -37,5 +47,10 @@ void alternation(struct nfa_state *, struct nfa_state *);
 
 void kleene_closure(struct nfa_state *);
 
+/* Variables */
+
+int no_states;
+
+static char *digit = "[0-9]";
 
 #endif
