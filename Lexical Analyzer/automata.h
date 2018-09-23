@@ -12,12 +12,7 @@
 
 /* Data Structures */
 typedef struct nfa_state {
-    int label;
-    char *accepting_state;
-    int anchored;
 
-    struct nfa_state *next_state;
-    struct nfa_state *empty_transitions;
 
 };
 
