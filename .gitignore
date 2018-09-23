@@ -53,8 +53,4 @@ dkms.conf
 
 .vscode*
 .vscode
-<<<<<<< HEAD
 rejects*
-=======
-rejects.*
->>>>>>> c00a2e2c9129ee96d02b8ead0f3cceb5ec6949bf
