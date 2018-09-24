@@ -2,6 +2,7 @@
 #define AUTOMATA_H
 
 #include <stdio.h>
+#include "../Data Structures/structures.h"
 
 #define NONE 0
 #define START 1
@@ -39,13 +40,20 @@ typedef enum re_operands {
 
 /* Function Declaration */
 void parse_errors(int type);
+
 struct nfa_state *state_construction(int , struct nfa_state *, struct nfa_state *);
 
-void concatenation(struct nfa_state *, struct nfa_state *);
+void concatenation(struct fragments *, struct fragments *);
 
 void alternation(struct nfa_state *, struct nfa_state *);
 
 void kleene_closure(struct nfa_state *);
+
+void next_state(union out_states *, struct fragments *);
+
+struct fragments create_fragment(struct nfa_state *start, union out_states *out);
+
+void test_nfa();
 
 /* Variables */
 

@@ -31,7 +31,6 @@ extern struct fragments states[MAX_LEN];
 /* Functions */
 
 void push(struct fragments );
-
 struct fragments pop();
 
 #endif

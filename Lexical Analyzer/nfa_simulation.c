@@ -35,13 +35,25 @@ struct nfa_state *state_construction(int character, struct nfa_state *next_state
     return temp;
 }
 
-union out_states(struct nfa_state *start, union out_states *out) {
-    return *out;
+struct fragments create_fragment(struct nfa_state *start, union out_states *out) {
+    struct fragments temp = { start, out};
+    return temp;
 }
 
-void concatenation(struct nfa_state *start, struct nfa_state *end) {
-    start->next_state = end->next_state;
+void next_state(union out_states *out, struct fragments *fragment) {
+    union out_states *temp;
 
+    for (; out; out = temp) {
+        temp = out->out;
+        out->start = fragment;
+    }
+
+}
+void concatenation(struct fragments *start, struct fragments *end) {
+    next_state(start->pointers, end->start);
+    //struct fragments temp = malloc(sizeof(struct fragments));
+    struct fragments temp = create_fragment(start->start, end->pointers);
+    push(temp);
 }
 
 void alternation(struct nfa_state *start, struct nfa_state *end) {}
