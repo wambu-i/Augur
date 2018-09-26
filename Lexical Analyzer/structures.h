@@ -1,14 +1,16 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-#include "../Lexical Analyzer/automata.h"
+//#include "automata.h"
 
 #define MAX_LEN 1000
 
 
 /* Data Structures */
+typedef union out_states out_states;
+typedef struct fragments fragments;
 
-typedef struct fragments {
+struct fragments {
     struct nfa_state *start;
     union out_states *pointers;
 };
@@ -18,19 +20,19 @@ typedef enum errors {
     ERR_EMPTY
 } err;
 
-typedef union out_states {
+union out_states {
     struct nfa_state *start;
     union out_states *out;
 };
 
 /* Variables */
-int stack_pointer;
 
-extern struct fragments states[MAX_LEN];
+/* extern fragment fragments; */
+extern fragments states[MAX_LEN];
 
 /* Functions */
 
-void push(struct fragments );
-struct fragments pop();
+void push(fragments frag);
+fragments pop();
 
 #endif

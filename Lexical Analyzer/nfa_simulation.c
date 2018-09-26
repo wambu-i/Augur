@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../Data Structures/structures.h"
 #include "automata.h"
 #include "globals.h"
+#include "structures.h"
 
 
 #define STR_LENGTH 100
 
-static char *error[STR_LENGTH];
+static char error[STR_LENGTH];
+int line_number;
 
 char *error_messages =  {
     "Memory cannot be allocated for the new NFA state",
@@ -24,8 +25,8 @@ void parse_errors(int type) {
 
 }
 /* Create an nfa state */
-struct nfa_state *state_construction(int character, struct nfa_state *next_state, struct nfa_state *split_state) {
-    struct nfa_state *temp = malloc(sizeof(struct nfa_state));
+nfa_state *state_construction(int character, nfa_state *next_state, nfa_state *split_state) {
+    nfa_state *temp = malloc(sizeof(nfa_state));
     temp->character = character;
     temp->next_state = next_state;
     temp->split_state = split_state;
@@ -35,12 +36,12 @@ struct nfa_state *state_construction(int character, struct nfa_state *next_state
     return temp;
 }
 
-struct fragments create_fragment(struct nfa_state *start, union out_states *out) {
-    struct fragments temp = { start, out};
+fragments create_fragment(nfa_state *start, out_states *out) {
+    fragments temp = { start, out};
     return temp;
 }
 
-void next_state(union out_states *out, struct fragments *fragment) {
+void next_state(out_states *out, fragments *fragment) {
     union out_states *temp;
 
     for (; out; out = temp) {
@@ -49,10 +50,10 @@ void next_state(union out_states *out, struct fragments *fragment) {
     }
 
 }
-void concatenation(struct fragments *start, struct fragments *end) {
+void concatenation(fragments *start, fragments *end) {
     next_state(start->pointers, end->start);
     //struct fragments temp = malloc(sizeof(struct fragments));
-    struct fragments temp = create_fragment(start->start, end->pointers);
+    fragments temp = create_fragment(start->start, end->pointers);
     push(temp);
 }
 
