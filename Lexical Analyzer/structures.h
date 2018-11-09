@@ -1,7 +1,7 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-//#include "automata.h"
+#include <stdbool.h>
 
 #define MAX_LEN 1000
 
@@ -29,10 +29,14 @@ union out_states {
 
 /* extern fragment fragments; */
 extern fragments states[MAX_LEN];
+extern char *operators;
 
 /* Functions */
 
 void push(fragments frag);
-fragments pop();
+bool pop(fragments *);
+/* fragments pop(); */
+
+void test_pop();
 
 #endif

@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include "analyzer.h"
+#include "globals.h"
+
+int elements;
 
 struct node *head = NULL;
 

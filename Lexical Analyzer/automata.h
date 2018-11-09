@@ -1,7 +1,6 @@
 #ifndef AUTOMATA_H
 #define AUTOMATA_H
 
-#include <stdio.h>
 #include "structures.h"
 
 #define NONE 0
@@ -33,22 +32,28 @@ typedef enum error_states {
 } errors;
 
 typedef enum re_operands {
-    L_PAREN, /*( */
-    R_PAREN, /*) */
-    CONCAT,
-    ALTER, /* | */
-    CLOS /* * */
+    CONCATENATION = '.',
+    UNION = '|',
+    CLOSURE = '*',
+    LEFT_P = '(',
+    RIGHT_P = ')',
+    LEFT_SB = '[',
+    RIGHT_SB = ']'
 } operands;
 
 
 /* Function Declaration */
 void parse_errors(int type);
 
+void create_buffers(char *);
+
 nfa_state *state_construction(int , nfa_state *, nfa_state *);
 
 void concatenation(fragments *, fragments *);
 
-void alternation(nfa_state *, nfa_state *);
+/* void alternation(nfa_state *, nfa_state *); */
+
+bool alternation();
 
 void kleene_closure(nfa_state *);
 
@@ -56,12 +61,14 @@ void next_state(out_states *, fragments *);
 
 struct fragments create_fragment(nfa_state *start, out_states *out);
 
-void test_nfa();
+char *create_postfix(char *);
+
+nfa_state *create_nfa();
 
 /* Variables */
 
 int no_states;
-
 static char *digit = "[0-9]";
+fragments fragment;
 
 #endif

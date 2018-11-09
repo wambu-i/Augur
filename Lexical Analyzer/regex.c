@@ -8,7 +8,7 @@
 
 #define DELIMITER "\\s"
 #define IDENTIFIER "[A-Za-z][0-9A-Za-z]*(_[0-9A-Za-z]+)*( [A-Za-z][0-9A-Za-z]*(_[0-9A-Za-z]+)*:)"
-#define INCLUDE "!verwenden (<[^>]+>)" 
+#define INCLUDE "!verwenden (<[^>]+>)"
 #define BUFFER 2048
 
 
@@ -52,7 +52,11 @@ int match_language(char *line) {
         return EXIT_FAILURE;
     }
 
-    match = pcre_exec(
+    printf("%s\n", regex);
+
+    return 0;
+
+/*     match = pcre_exec(
         regex,
         NULL,
         line,
@@ -85,5 +89,5 @@ int match_language(char *line) {
         int substring_length = ovector[2 * i + 1] - ovector[2 * i];
         printf("%2d: %.*s\n", i, substring_length, start);
     }
-    return 0;
+    return 0; */
 }

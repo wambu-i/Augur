@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <automata.h>
+#include "automata.h"
+#include "globals.h"
 
 char *re_test = "ab";
 

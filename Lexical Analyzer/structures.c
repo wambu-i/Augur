@@ -2,15 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structures.h"
-
+#include "automata.h"
 
 #define STR_LENGTH 100
 
+
 static char error[STR_LENGTH];
-
-
-int stack_pointer = 0;
-
+static int stack_pointer;
 fragments states[MAX_LEN];
 
 static char *error_messages[] =  {
@@ -20,17 +18,42 @@ static char *error_messages[] =  {
 
 
 void push(fragments frag) {
-    if (stack_pointer > MAX_LEN) {
+    /*printf("%d\n", stack_pointer );*/
+    if (stack_pointer > MAX_LEN - 1) {
         strcpy(error, error_messages[ERR_FULL]);
         printf("%s", error);
     }
     else {
+        printf("Pushing.\n");
         states[stack_pointer++] = frag;
+        //printf("%d\n", stack_pointer);
     }
 }
 
-fragments pop() {
+void test_pop() {
     if (stack_pointer > 0) {
+        printf("Popping - %d\n", --stack_pointer);
+    }
+    else {
+        ;
+    }
+}
+
+bool pop(fragments *frag) {
+    if (stack_pointer > 0) {
+        *frag =  states[--stack_pointer];
+        return true;
+    }
+    else {
+        strcpy(error, error_messages[2]);
+        printf("%s", error);
+        return false;
+    }
+
+}
+/* fragments pop() {
+    if (stack_pointer > 0) {
+        //printf("%d\n", stack_pointer);
         return states[--stack_pointer];
     }
     else {
@@ -39,4 +62,4 @@ fragments pop() {
         //fragments temp = NULL;
         return states[0];
     }
-}
+} */
