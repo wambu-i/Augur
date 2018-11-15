@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "structures.h"
-#include "automata.h"
 
 #define STR_LENGTH 100
 

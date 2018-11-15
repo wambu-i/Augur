@@ -29,7 +29,7 @@ union out_states {
 
 /* extern fragment fragments; */
 extern fragments states[MAX_LEN];
-extern char *operators;
+char operators[MAX_LEN];
 
 /* Functions */
 
