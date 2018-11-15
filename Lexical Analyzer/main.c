@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "analyzer.h"
-#include "automata.h"
+#include <automata.h>
 
 int main(int argc, char *argv[]) {
     /*if (argc == 1) {
@@ -14,7 +13,8 @@ int main(int argc, char *argv[]) {
     //match_language("This is a line");
     char *_test = "a|b";
     create_buffers(_test);
-    create_nfa();
+    nfa_state *result = create_nfa();
+    printf("Beginning - %d\n", result->next_state->character);
     return 0;
   
 }

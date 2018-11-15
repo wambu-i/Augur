@@ -1,10 +1,14 @@
+/* Create's non-deterministic finite automata regular expressions
+* using Thompson's subset construction algorithm.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "automata.h"
-#include "globals.h"
-#include "structures.h"
+#include <automata.h>
+#include <globals.h>
+#include <structures.h>
 
 
 #define STR_LENGTH 100
@@ -13,6 +17,7 @@ static char error[STR_LENGTH];
 int line_number;
 char operators[MAX_LEN];
 static char *operator;
+nfa_state match_state = { match };
 
 char *error_messages[] =  {
     "Memory cannot be allocated for the new NFA state",
@@ -55,53 +60,23 @@ fragments create_fragment(nfa_state *start, out_states *out) {
 }
 
 
-/* void next_state(out_states *out, fragments *fragment) {
-    union out_states *temp;
-
-    for (; out; out = temp) {
-        temp = out->out;
-        out->start = fragment;
-    }
-
-} */
-void concatenation(fragments *start, fragments *end) {
-    //next_state(start->pointers, end->start);
-    //struct fragments temp = malloc(sizeof(struct fragments));
-    fragments temp = create_fragment(start->start, end->pointers);
-}
-
-/* void alternation(struct nfa_state *start, struct nfa_state *end) {}
- */
-
-bool concatenation() {
-    fragments frag_A, frag_B;
-        if (!pop(&frag_B) || !pop(&frag_A)) {
-        return false;
-    };
-    nfa_state *temp = state_construction();
-
-    return true;
-}
-
-
 bool alternation() {
     fragments frag_A, frag_B;
-    if (!pop(&frag_B) || !pop(&frag_A)) {
+    if (!pop(&frag_B) || !pop(&frag_A))
         return false;
-    };
+
     nfa_state *temp = state_construction(split, frag_A.start, frag_B.start);
-    fragment = create_fragment(temp, );
+    fragment = create_fragment(temp, concate_outs(frag_A.pointers, frag_B.pointers));
     push(fragment);
+
     return true;
 }
-
 
 bool create_buffers(char *re) {
     int length = strlen(re);
     operator = operators;
     nfa_state *state;
     fragments frag;
-    char *s;
 
     #define push_op(s) *operator++ = s
 
@@ -116,7 +91,7 @@ bool create_buffers(char *re) {
                 break;
             default:
                 state = state_construction(op, NULL, NULL);
-                frag = create_fragment(state, state->next_state);
+                frag = create_fragment(state, flatten(&state->next_state));
                 push(frag);
                 break;
         }
@@ -130,6 +105,7 @@ bool create_buffers(char *re) {
 }
 
 nfa_state *create_nfa() {
+    fragments frag;
     #define pop_op() *(--operator)
     operands op = pop_op();
     switch(op) {
@@ -143,8 +119,32 @@ nfa_state *create_nfa() {
         default:
             break;
     }
+    pop(&frag);
     if (operator != operators) {
         return NULL;
     }
+    create_match_state(&match_state, frag.pointers);
+    return frag.start;
     #undef pop_op
+}
+
+void create_match_state(nfa_state *state, out_states *out) {
+    /* Points the dangling arrows of the last state
+    * to the matching state.
+    */
+    out_states *temp;
+
+    while (out) {
+        temp = out->out;
+        out->state = state;
+        out = temp;
+    }
+}
+
+out_states* flatten(nfa_state **out) {
+	out_states *temp;
+
+	temp = (out_states*)out;
+	temp->out = NULL;
+	return temp;
 }

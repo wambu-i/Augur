@@ -1,9 +1,0 @@
-Push charaters onto stack
-Pop when an operand is encountered
-Perform operation based on operand
-Push onto stack
-Construct final nfa by connecting the fragments.
-
-
-(a|b)*
-

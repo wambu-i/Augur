@@ -67,6 +67,9 @@ char *create_postfix(char *);
 
 nfa_state *create_nfa();
 
+void create_match_state(nfa_state *, out_states *);
+out_states* flatten(nfa_state **outp);
+
 /* Variables */
 
 int no_states;

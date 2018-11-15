@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "structures.h"
+#include <structures.h>
 
 #define STR_LENGTH 100
 
@@ -63,9 +63,14 @@ bool pop(fragments *frag) {
     }
 } */
 
-out_states *concate_outs(out_states a, out_states b) {
+out_states *concate_outs(out_states *a, out_states *b) {
     /* Concatenate two lists of out pointers
     * that point to out states of an NFA state
     */
-
+   out_states *temp = a;
+   while (a->out) {
+       a = a->out;
+   }
+   a->out = b;
+   return temp;
 }
