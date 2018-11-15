@@ -11,7 +11,8 @@
 
 static char error[STR_LENGTH];
 int line_number;
-char *operators;
+char operators[MAX_LEN];
+static char *operator;
 
 char *error_messages[] =  {
     "Memory cannot be allocated for the new NFA state",
@@ -32,7 +33,7 @@ nfa_state *state_construction(int character, nfa_state *next_state, nfa_state *s
     * An NFA state consists of the transition character, the next state, and
     * a split state if there is more than one next state
      */
-    nfa_state *temp = malloc(sizeof(nfa_state));
+    nfa_state *temp = malloc(sizeof(nfa_state *));
     temp->character = character;
     temp->next_state = next_state;
     temp->split_state = split_state;
@@ -71,28 +72,47 @@ void concatenation(fragments *start, fragments *end) {
 
 /* void alternation(struct nfa_state *start, struct nfa_state *end) {}
  */
-bool alternation() {
-    fragments frag_1, frag_2;
-    if (!pop(&frag_1) || !pop(&frag_2)) {
-        printf("Not working.\n");
+
+bool concatenation() {
+    fragments frag_A, frag_B;
+        if (!pop(&frag_B) || !pop(&frag_A)) {
         return false;
     };
-    printf("Working.\n");
+    nfa_state *temp = state_construction();
+
     return true;
 }
 
 
-void create_buffers(char *re) {
+bool alternation() {
+    fragments frag_A, frag_B;
+    if (!pop(&frag_B) || !pop(&frag_A)) {
+        return false;
+    };
+    nfa_state *temp = state_construction(split, frag_A.start, frag_B.start);
+    fragment = create_fragment(temp, );
+    push(fragment);
+    return true;
+}
+
+
+bool create_buffers(char *re) {
     int length = strlen(re);
+    operator = operators;
     nfa_state *state;
     fragments frag;
+    char *s;
+
+    #define push_op(s) *operator++ = s
+
     for (int i = 0; i != length; i++) {
         operands op = re[i];
         switch(op) {
             case UNION: /* '|' operation */
             case CLOSURE: /* Zero or more */
             case CONCATENATION: /* Concantenation */
-                operators[i] = op;
+                push_op((char) op);
+                *operator = (char) op;
                 break;
             default:
                 state = state_construction(op, NULL, NULL);
@@ -101,14 +121,20 @@ void create_buffers(char *re) {
                 break;
         }
     }
+
+    if (operator != operators) {
+        return false;
+    }
+    return true;
+    #undef push_op
 }
 
 nfa_state *create_nfa() {
-    #define pop() *--operators
-    operands op = pop();
+    #define pop_op() *(--operator)
+    operands op = pop_op();
     switch(op) {
         case UNION:
-            printf("Working!\n");
+            alternation();
             break;
         case CLOSURE:
             break;
@@ -117,5 +143,8 @@ nfa_state *create_nfa() {
         default:
             break;
     }
-    #undef pop
+    if (operator != operators) {
+        return NULL;
+    }
+    #undef pop_op
 }

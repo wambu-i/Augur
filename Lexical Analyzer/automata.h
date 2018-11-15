@@ -31,7 +31,7 @@ typedef enum error_states {
 
 } errors;
 
-typedef enum re_operands {
+typedef enum {
     CONCATENATION = '.',
     UNION = '|',
     CLOSURE = '*',
@@ -41,17 +41,19 @@ typedef enum re_operands {
     RIGHT_SB = ']'
 } operands;
 
+typedef enum {
+    split = 256,
+    match = 257
+} state;
 
 /* Function Declaration */
 void parse_errors(int type);
 
-void create_buffers(char *);
+bool create_buffers(char *);
 
 nfa_state *state_construction(int , nfa_state *, nfa_state *);
 
 void concatenation(fragments *, fragments *);
-
-/* void alternation(nfa_state *, nfa_state *); */
 
 bool alternation();
 
@@ -68,7 +70,6 @@ nfa_state *create_nfa();
 /* Variables */
 
 int no_states;
-static char *digit = "[0-9]";
 fragments fragment;
 
 #endif

@@ -13,7 +13,8 @@ int main(int argc, char *argv[]) {
     }*/
     //match_language("This is a line");
     char *_test = "a|b";
-    create_nfa(_test);
+    create_buffers(_test);
+    create_nfa();
     return 0;
   
 }

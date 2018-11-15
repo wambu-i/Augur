@@ -10,9 +10,15 @@
 typedef union out_states out_states;
 typedef struct fragments fragments;
 
+union out_states {
+    struct nfa_state *start;
+    union out_states *out;
+};
+
+
 struct fragments {
     struct nfa_state *start;
-    union out_states *pointers;
+    out_states *pointers;
 };
 
 typedef enum errors {
@@ -20,22 +26,20 @@ typedef enum errors {
     ERR_EMPTY
 } err;
 
-union out_states {
-    struct nfa_state *start;
-    union out_states *out;
-};
 
 /* Variables */
 
 /* extern fragment fragments; */
 extern fragments states[MAX_LEN];
-extern char *operators;
+char operators[MAX_LEN];
 
 /* Functions */
 
 void push(fragments frag);
 bool pop(fragments *);
 /* fragments pop(); */
+
+out_states *concate_outs(out_states a, out_states b);
 
 void test_pop();
 
