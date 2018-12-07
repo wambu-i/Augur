@@ -48,7 +48,7 @@ bool pop(fragments *frag) {
         printf("%s", error);
         return false;
     }
-
+    printf("%d\n", stack_pointer);
 }
 /* fragments pop() {
     if (stack_pointer > 0) {

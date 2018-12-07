@@ -1,5 +1,6 @@
-/* Create's non-deterministic finite automata regular expressions
-* using Thompson's subset construction algorithm.
+/*
+* Create's non-deterministic finite automata regular expressions
+* using Thompson's algorithm.
 */
 
 #include <stdio.h>
@@ -65,7 +66,7 @@ bool alternation() {
     if (!pop(&frag_B) || !pop(&frag_A))
         return false;
 
-    nfa_state *temp = state_construction(split, frag_A.start, frag_B.start);
+    nfa_state *temp = state_construction(epsilon, frag_A.start, frag_B.start);
     fragment = create_fragment(temp, concate_outs(frag_A.pointers, frag_B.pointers));
     push(fragment);
 

@@ -3,16 +3,10 @@
 
 #include "structures.h"
 
-#define NONE 0
-#define START 1
-#define END 2
-
-#define EPSILON -1
-#define EMPTY -2
-
 
 /* Data Structures */
 typedef struct nfa_state nfa_state;
+typedef struct dfa_state dfa_state;
 
 struct nfa_state {
     int character;
@@ -20,6 +14,9 @@ struct nfa_state {
     struct nfa_state *split_state;
 };
 
+struct dfa_state {
+    int character;
+};
 /*
 Provides various errors that can be encountered when constructing the NFA.
 All errors lead to a program failure.
@@ -42,7 +39,7 @@ typedef enum {
 } operands;
 
 typedef enum {
-    split = 256,
+    epsilon = 256,
     match = 257
 } state;
 
@@ -68,7 +65,12 @@ char *create_postfix(char *);
 nfa_state *create_nfa();
 
 void create_match_state(nfa_state *, out_states *);
+
 out_states* flatten(nfa_state **outp);
+
+void get_epsilon_closure(nfa_state *);
+
+void move();
 
 /* Variables */
 
