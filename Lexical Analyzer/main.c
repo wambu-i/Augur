@@ -14,7 +14,8 @@ int main(int argc, char *argv[]) {
     char *_test = "a|b";
     create_buffers(_test);
     nfa_state *result = create_nfa();
-    printf("Beginning - %d\n", result->next_state->character);
+    printf("Beginning - %d\n", result->character);
+    get_epsilon_closure(result);
     return 0;
   
 }

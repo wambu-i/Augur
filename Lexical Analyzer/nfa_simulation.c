@@ -88,7 +88,7 @@ bool create_buffers(char *re) {
             case CLOSURE: /* Zero or more */
             case CONCATENATION: /* Concantenation */
                 push_op((char) op);
-                *operator = (char) op;
+                //*operator = (char) op;
                 break;
             default:
                 state = state_construction(op, NULL, NULL);
