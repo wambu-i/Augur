@@ -39,6 +39,7 @@ void get_epsilon_closure(nfa_state *state) {
     #define empty() empty_stack = pop_state()
 
     nfa_state *temp = state;
+    nfa_state popped;
 
 
     while (temp != NULL) {
@@ -63,8 +64,10 @@ void get_epsilon_closure(nfa_state *state) {
         }
     }
 
-    while (pop_state())
-        pop_state();
+    while (true) {
+        popped = pop_state();
+        if (!popped)
+            return;
     }
 
     #undef pop_state
