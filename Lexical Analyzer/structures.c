@@ -1,22 +1,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <errors.h>
 #include <structures.h>
 
+
 #define STR_LENGTH 100
+#define TOP -1
 
 
 static char error[STR_LENGTH];
 static int stack_pointer;
 fragments states[MAX_LEN];
 
-static char *error_messages[] =  {
-    "Cannot push onto the stack. The stack is full.",
-    "Cannot pop from the stack. The stack is empty."
-};
 
+stack *create_stack(types type) {
+    stack *new = malloc(sizeof(*new));
+    if (!new) {
+        strcpy(error, error_messages[ERR_ALLOCATE]);
+        fprintf(stderr, "%s", error);
+        exit(EXIT_FAILURE);
+    }
+    new->top = TOP;
+    new->type = type;
+    new->stack = malloc(sizeof(*new->stack) * MAX_LEN);
+    if (!new->stack) {
+        free(new);
+        strcpy(error, error_messages[ERR_ALLOCATE]);
+        fprintf(stderr, "%s", error);
+        exit(EXIT_FAILURE);
+    }
+    return new;
+}
 
-void push(fragments frag) {
+bool full(stack *stack) {
+    return (stack->top == MAX_LEN - 1);
+}
+
+bool empty(stack *stack) {
+    return (stack->top == -1);
+}
+
+void push(stack *stack, ...) {
+    va_list args;
+    va_start(args, stack);
+
+    if (stack->top == MAX_LEN - 1) {
+        strcpy(error, error_messages[ERR_FULL]);
+        fprintf(stderr, "%s", error);
+        exit(EXIT_FAILURE);
+    }
+    switch (stack->type) {
+        case FRAGMENTS:
+            stack->stack[stack->top++].states = va_arg(args, fragments *);
+            break;
+        case STATES:
+            stack->stack[stack->top++].nfa_stack = va_arg(args, nfa_state *);
+            break;
+        default:
+            strcpy(error, error_messages[ERR_UNKNOWN]);
+            fprintf(stderr, "%s", error);
+            exit(EXIT_FAILURE);
+    }
+    va_end(args);
+}
+
+/* Void pointer because it can be cast into any desired pointer.*/
+void pop(stack *stack, void *element) {
+    if (stack->top == -1) {
+        strcpy(error, error_messages[ERR_EMPTY]);
+        fprintf(stderr, "%s", error);
+        exit(EXIT_FAILURE);
+    }
+    switch (stack->type) {
+        case FRAGMENTS:
+            *(fragments *) element = stack->stack[--stack->top].states;
+            break;
+        case STATES:
+            element = stack->stack[--stack->top].nfa_stack;
+            break;
+        default:
+            strcpy(error, error_messages[ERR_UNKNOWN]);
+            fprintf(stderr, "%s", error);
+            exit(EXIT_FAILURE);
+    }
+}
+
+void t_push(fragments frag) {
     /*printf("%d\n", stack_pointer );*/
     if (stack_pointer > MAX_LEN - 1) {
         strcpy(error, error_messages[ERR_FULL]);
@@ -38,7 +109,7 @@ void test_pop() {
     }
 }
 
-bool pop(fragments *frag) {
+bool t_pop(fragments *frag) {
     if (stack_pointer > 0) {
         *frag =  states[--stack_pointer];
         return true;
@@ -50,18 +121,7 @@ bool pop(fragments *frag) {
     }
     printf("%d\n", stack_pointer);
 }
-/* fragments pop() {
-    if (stack_pointer > 0) {
-        //printf("%d\n", stack_pointer);
-        return states[--stack_pointer];
-    }
-    else {
-        strcpy(error, error_messages[2]);
-        printf("%s", error);
-        //fragments temp = NULL;
-        return states[0];
-    }
-} */
+
 
 out_states *concate_outs(out_states *a, out_states *b) {
     /* Concatenate two lists of out pointers

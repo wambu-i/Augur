@@ -10,6 +10,7 @@
 #include <automata.h>
 #include <globals.h>
 #include <structures.h>
+#include <errors.h>
 
 
 #define STR_LENGTH 100
@@ -20,12 +21,7 @@ char operators[MAX_LEN];
 static char *operator;
 nfa_state match_state = { match };
 
-char *error_messages[] =  {
-    "Memory cannot be allocated for the new NFA state",
-    "The Regular Expression provided is not valid"
-};
-
-errors error_type;
+stack *fragment_states;
 
 void parse_errors(int type) {
     strcpy(error, error_messages[type]);
@@ -63,12 +59,12 @@ fragments create_fragment(nfa_state *start, out_states *out) {
 
 bool alternation() {
     fragments frag_A, frag_B;
-    if (!pop(&frag_B) || !pop(&frag_A))
+    if (!pop(fragment_states, &frag_B) || !pop(fragment_states, &frag_A))
         return false;
 
     nfa_state *temp = state_construction(epsilon, frag_A.start, frag_B.start);
     fragment = create_fragment(temp, concate_outs(frag_A.pointers, frag_B.pointers));
-    push(fragment);
+    push(fragment_states, &fragment);
 
     return true;
 }
@@ -76,6 +72,7 @@ bool alternation() {
 bool create_buffers(char *re) {
     int length = strlen(re);
     operator = operators;
+    fragment_states = create_stack(FRAGMENTS);
     nfa_state *state;
     fragments frag;
 
@@ -93,7 +90,7 @@ bool create_buffers(char *re) {
             default:
                 state = state_construction(op, NULL, NULL);
                 frag = create_fragment(state, flatten(&state->next_state));
-                push(frag);
+                push(fragment_states, &frag);
                 break;
         }
     }
@@ -120,7 +117,7 @@ nfa_state *create_nfa() {
         default:
             break;
     }
-    pop(&frag);
+    pop(fragment_states, &frag);
     if (operator != operators) {
         return NULL;
     }

@@ -4,30 +4,6 @@
 #include "structures.h"
 
 
-/* Data Structures */
-typedef struct nfa_state nfa_state;
-typedef struct dfa_state dfa_state;
-
-struct nfa_state {
-    int character;
-    struct nfa_state *next_state;
-    struct nfa_state *split_state;
-};
-
-struct dfa_state {
-    int character;
-};
-/*
-Provides various errors that can be encountered when constructing the NFA.
-All errors lead to a program failure.
-*/
-
-typedef enum error_states {
-    ERR_MEM, /* No memory available */
-    ERR_EXPR /* Bad regular expression provided */
-
-} errors;
-
 typedef enum {
     CONCATENATION = '.',
     UNION = '|',
