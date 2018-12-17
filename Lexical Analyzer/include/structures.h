@@ -19,6 +19,10 @@ union out_states {
     union out_states *out;
 };
 
+union stacks {
+    struct nfa_state nfa_stack;
+    struct fragments states;
+};
 
 union stacks {
     struct nfa_state *nfa_stack;

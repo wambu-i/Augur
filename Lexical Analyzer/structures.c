@@ -75,7 +75,7 @@ void pop(stack *stack, void *element) {
     }
     switch (stack->type) {
         case FRAGMENTS:
-            *(fragments *) element = stack->stack[--stack->top].states;
+            *((fragments *) element) = stack->stack[--stack->top].states
             break;
         case STATES:
             element = stack->stack[--stack->top].nfa_stack;
