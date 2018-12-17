@@ -22,6 +22,7 @@ stack *create_stack(types type) {
         fprintf(stderr, "%s", error);
         exit(EXIT_FAILURE);
     }
+    
     new->top = TOP;
     new->type = type;
     new->stack = malloc(sizeof(*new->stack) * MAX_LEN);
@@ -67,7 +68,8 @@ void push(stack *stack, ...) {
 }
 
 /* Void pointer because it can be cast into any desired pointer.*/
-void pop(stack *stack, void *element) {
+bool pop(stack *stack, void *element) {
+    bool popped = false;
     if (stack->top == -1) {
         strcpy(error, error_messages[ERR_EMPTY]);
         fprintf(stderr, "%s", error);
@@ -75,16 +77,20 @@ void pop(stack *stack, void *element) {
     }
     switch (stack->type) {
         case FRAGMENTS:
-            *((fragments *) element) = stack->stack[--stack->top].states
+            printf("Popping element %d\n", stack->top);
+            *((fragments *) element) = *stack->stack[--stack->top].states;
+            popped = true;
             break;
         case STATES:
             element = stack->stack[--stack->top].nfa_stack;
+            popped = true;
             break;
         default:
             strcpy(error, error_messages[ERR_UNKNOWN]);
             fprintf(stderr, "%s", error);
             exit(EXIT_FAILURE);
     }
+    return popped;
 }
 
 void t_push(fragments frag) {

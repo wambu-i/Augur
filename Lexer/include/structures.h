@@ -20,11 +20,6 @@ union out_states {
 };
 
 union stacks {
-    struct nfa_state nfa_stack;
-    struct fragments states;
-};
-
-union stacks {
     struct nfa_state *nfa_stack;
     struct fragments *states;
 };
@@ -63,7 +58,7 @@ char operators[MAX_LEN];
 /* Functions */
 stack *create_stack(types type);
 void push(stack *, ...);
-void pop(stack *, void *);
+bool pop(stack *, void *);
 
 struct nfa_stack *create_nfa_stack();
 bool full(stack *stack);

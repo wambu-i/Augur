@@ -12,7 +12,6 @@
 #include <structures.h>
 #include <errors.h>
 
-
 #define STR_LENGTH 100
 
 static char error[STR_LENGTH];
@@ -59,11 +58,18 @@ fragments create_fragment(nfa_state *start, out_states *out) {
 
 bool alternation() {
     fragments frag_A, frag_B;
+    /* To Do.
+    * See if the order of popping affects NFA construction.
+    */
     if (!pop(fragment_states, &frag_B) || !pop(fragment_states, &frag_A))
         return false;
+    
+    printf("Popped - %c\n", frag_A.start->character);
+    printf("Popped - %c\n", frag_B.start->character);
 
     nfa_state *temp = state_construction(epsilon, frag_A.start, frag_B.start);
     fragment = create_fragment(temp, concate_outs(frag_A.pointers, frag_B.pointers));
+  
     push(fragment_states, &fragment);
 
     return true;
@@ -73,6 +79,7 @@ bool create_buffers(char *re) {
     int length = strlen(re);
     operator = operators;
     fragment_states = create_stack(FRAGMENTS);
+    printf("%d\n", fragment_states->top);
     nfa_state *state;
     fragments frag;
 
@@ -85,11 +92,13 @@ bool create_buffers(char *re) {
             case CLOSURE: /* Zero or more */
             case CONCATENATION: /* Concantenation */
                 push_op((char) op);
-                //*operator = (char) op;
+                // *operator = (char) op;
                 break;
             default:
+                printf("This is %c,\n", op);
                 state = state_construction(op, NULL, NULL);
                 frag = create_fragment(state, flatten(&state->next_state));
+                printf("Char %c\n", frag.start->character);
                 push(fragment_states, &frag);
                 break;
         }
@@ -118,6 +127,7 @@ nfa_state *create_nfa() {
             break;
     }
     pop(fragment_states, &frag);
+    printf("frag - %d\n", frag.start->character);
     if (operator != operators) {
         return NULL;
     }
